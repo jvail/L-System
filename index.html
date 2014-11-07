@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>L-System</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+
+      var sceneObject = null;
+      var loader = null;
+
+      $(function () {
+
+          $('#parse').on('click', function () {
+            $('#output').fadeIn("fast");
+            parse();
+          });
+
+          function parse () {
+            var ls = editor.getSession().getValue();
+            console.log(ls);
+            Module.read_ls(ls);
+          }
+
+          $('#files').on('change', function() {
+            var name = $(this).val();
+            $.ajax({
+              url: 'ls/' + name,
+              dataType: 'text',
+              success: function (data) {
+                editor.getSession().setValue(data);
+              }
+            });
+
+          });
+
+          setTimeout(parse, 1000);
+
+      });
+
+    </script>
+    <style>
+      body {
+        font-family: Monospace;
+        background-color: #000;
+        color: #fff;
+        margin: 0px;
+        overflow: hidden;
+      }
+      #info {
+        color: #fff;
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        text-align: center;
+        z-index: 100;
+        display:block;
+      }
+      #info a { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
+      #left {
+        position: absolute;
+        height: 100%;
+        width: 500px;
+      }
+      #editor { 
+        height: 90%;
+        width: 500px;
+        background-color: rgba(0,0,0,0.1);
+      }
+      #output {
+          position: absolute;
+          top: 50px;
+          right: 10px;
+          height: 90%;
+          width: 450px;
+          background-color: rgba(0,0,0,0.1);
+          border: 0;
+          color: white;
+          font-family: 'Lucida Console', Monaco, monospace;
+          outline: none;
+          max-width: 450px;
+          margin-bottom: 10px;
+          margin-left: 10px;
+      }
+      #control {
+        margin-top: 20px;
+        height: 30px;
+        padding: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <textarea id="output" rows="8"></textarea>
+    <div id="info">
+      Little L-System playground (<a href="" target="_blank">build</a> with three.js and emscripten). Lparser and examples by <a href="http://laurenslapre.nl/lapre_004.htm" target="_blank">Laurens Lapre</a>
+    </div>
+
+    <div id="left">
+      <div id="control">
+        <label for="files">Select example file</label>
+          <select id="files">
+            <option value="abop1.ls">abop1</option>
+            <option value="abop2.ls">abop2</option>
+            <option value="abop3.ls">abop3</option>
+            <option value="abop4.ls">abop4</option>
+            <option value="abop5.ls">abop5</option>
+            <option value="abop6.ls">abop6</option>
+            <option value="airhorse.ls">airhorse</option>
+            <option value="axis.ls">axis</option>
+            <option value="bekerplant.ls">bekerplant</option>
+            <option value="cello_plant.ls">cello_plant</option>
+            <option value="colors.ls">colors</option>
+            <option value="fern.ls">fern</option>
+            <option value="fractal_hexahedron.ls">fractal_hexahedron</option>
+            <option value="fractal_octahedron.ls">fractal_octahedron</option>
+            <option value="horn.ls">horn</option>
+            <option value="leaves.ls" selected>leaves</option>
+            <option value="menger_cube.ls">menger_cube</option>
+            <option value="passie.ls">passie</option>
+            <option value="polyhedra.ls">polyhedra</option>
+            <option value="rainbow.ls">rainbow</option>
+            <option value="shell.ls">shell</option>
+            <option value="sierpinski.ls">sierpinski</option>
+            <option value="spider.ls">spider</option>
+            <option value="spiral_boat.ls">spiral_boat</option>at.ls
+            <option value="spiral0.ls">spiral0</option>
+            <option value="spiral1.ls">spiral1</option>
+            <option value="spiral2.ls">spiral2</option>
+            <option value="spiral_plant.ls">spiral_plant</option>
+            <option value="trail_of_trees.ls">trail_of_trees</option>
+            <option value="tree1.ls">tree1</option>
+            <option value="tree2.ls">tree2</option>
+            <option value="tree3.ls">tree3</option>
+            <option value="tree4.ls">tree4</option>
+            <option value="tree6.ls">tree6</option>
+            <option value="tree7.ls">tree7</option>
+            <option value="tree5.ls">tree5</option>
+          </select>
+and click 
+          <button id='parse'>Parse</button> (and wait) 
+        </div>
+        <div id="editor">
+# Lparser example file
+ 
+recursion 18
+angle 10  
+thickness 15  
+switch_yz 1
+shape 1
+
+axiom [|FFFFFFFFFFF]P>(90)'P>(90)'P>(90)'P  
+
+rule P = [&(10)G[ccA][ccB][a][b]]
+rule G = tFtFtFtFtFtFtFtFtFtFtFtFtF
+
+rule A = [+A{.].C.}
+rule B = [-B{.].C.}
+rule C = tfC
+
+rule a = [+a]d
+rule b = [-b]d
+rule d = tFd
+        </div>
+      </div>
+
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script>
+      <script>
+          var editor = ace.edit("editor");
+          editor.setTheme("ace/theme/monokai");
+          editor.getSession().setMode("ace/mode/javascript");
+          editor.session.setOption("useWorker", false);
+          document.getElementById('editor').style.fontSize='12px';
+      </script>
+
+      <!-- from three.js VRML loader example -->
+      <script src="three.js/three.min.js"></script>
+
+      <script src="three.js/OrbitControls.js"></script>
+
+      <script src="three.js/VRMLLoader.js"></script>
+
+      <script src="three.js/Detector.js"></script>
+      <script src="three.js/stats.min.js"></script>
+      <script src="lparser/Lparser2.js"></script>
+
+      <script>
+
+        if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+        var container, stats;
+
+        var camera, controls, scene, renderer;
+
+        var cross;
+
+        init2();
+
+        function init(wrl) {
+
+          if (sceneObject)
+            scene.remove(sceneObject);
+
+          sceneObject = loader.parse(wrl);
+          scene.add(sceneObject);
+
+          window.setTimeout(function () {
+            $('#output').fadeOut("slow", function () {
+              $('#output').val("");
+            });
+          }, 5000);
+
+        }
+
+        function init2() {
+
+
+          camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 1e10 );
+          camera.position.set(45,0,30);
+
+          renderer = new THREE.WebGLRenderer( { antialias: false } );
+          controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+          controls.rotateSpeed = 3.0;
+          controls.zoomSpeed = 5;
+
+          controls.noZoom = false;
+          controls.noPan = false;
+
+          scene = new THREE.Scene();
+          scene.add( camera );
+
+          // light
+
+          var dirLight = new THREE.DirectionalLight( 0xFFF8DC );
+          dirLight.position.set( 200, 200, 1000 ).normalize();
+
+          camera.add( dirLight );
+          camera.add( dirLight.target );
+
+          loader = new THREE.VRMLLoader();
+          loader.addEventListener( 'load', function ( event ) {
+
+            scene.add(event.content);
+
+          } );
+
+          // renderer
+
+
+          // container = document.createElement( 'div' );
+          // container.domElement.style.width = 500;
+          $('body').append( '<div class="container"></div>');
+          $('.container').append( renderer.domElement );
+          renderer.setSize( window.innerWidth, window.innerHeight );
+
+          stats = new Stats();
+          stats.domElement.style.position = 'absolute';
+          stats.domElement.style.top = '0px';
+          stats.domElement.style.right = '0px';
+          $('.container').append( stats.domElement );
+
+          //
+
+          window.addEventListener( 'resize', onWindowResize, false );
+
+          animate();
+
+        }
+
+        function onWindowResize() {
+
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+
+          renderer.setSize( window.innerWidth , window.innerHeight );
+
+          controls.handleResize();
+
+        }
+
+        function animate() {
+
+          requestAnimationFrame( animate );
+
+          controls.update();
+          renderer.render( scene, camera );
+
+          stats.update();
+
+        }
+
+        var Module = {
+          preRun: [],
+          postRun: [],
+          print: (function() {
+            var element = document.getElementById('output');
+            if (element) element.value = ''; // clear browser cache
+            return function(text) {
+              text = Array.prototype.slice.call(arguments).join(' ');
+              console.log(text);
+              if (element) {
+                element.value += text + "\n";
+                element.scrollTop = element.scrollHeight; // focus on bottom
+              }
+            };
+          })(),
+          printErr: function(text) {
+            text = Array.prototype.slice.call(arguments).join(' ');
+            if (0) { // XXX disabled for safety typeof dump == 'function') {
+              dump(text + '\n'); // fast, straight to the real console
+            } else {
+              console.error(text);
+            }
+          },
+          read_ls: function (ls) {
+
+            ccall('do_read_ls', null, ['string'], [ls]);
+          }
+        };
+
+      </script>
+  </body>
+</html>
