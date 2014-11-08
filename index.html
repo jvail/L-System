@@ -228,15 +228,15 @@ rule d = tFd
 
           window.setTimeout(function () { 
             sceneObject = loader.parse(wrl);
+            scene.add(sceneObject);
             scene.traverse (function (object) {
                 if (object instanceof THREE.Mesh) {
                   /* otherwise reflected light is white ??? */  
                   object.material.specular = object.material.color;
-                  object.material.shininess = 100;
+                  object.material.shininess = 30;
                 }
             });
             // console.log(sceneObject);
-            scene.add(sceneObject);
           }, 500);
 
         }
