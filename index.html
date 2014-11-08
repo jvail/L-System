@@ -65,6 +65,7 @@
       }
       #info a { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
       #left {
+        top: 50px;
         position: absolute;
         height: 100%;
         width: 100%;
@@ -231,8 +232,7 @@ rule d = tFd
             scene.add(sceneObject);
             scene.traverse (function (object) {
                 if (object instanceof THREE.Mesh) {
-                  /* otherwise reflected light is white ??? */  
-                  object.material.specular = object.material.color;
+                  object.material.specular = object.material.ambient = object.material.color;
                   object.material.shininess = 30;
                 }
             });
@@ -262,12 +262,9 @@ rule d = tFd
 
           // light
 
+          scene.add( new THREE.AmbientLight( 0x404040 ) );
 
-          // var ambient_clr = new THREE.Color(0.8, 0.8, 0.8);
-          // var ambient_lgt = new THREE.AmbientLight(ambient_clr.getHex());
-          // scene.add(ambient_lgt); 
-
-          var dirLight = new THREE.DirectionalLight( 0xffffff );
+          var dirLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
           dirLight.position.set( 1, 1, 1 ).normalize();
           camera.add( dirLight );
           camera.add( dirLight.target );

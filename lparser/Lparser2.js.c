@@ -7,7 +7,7 @@
    modified by Jan Vaillant
 */
 
-// EMCC_DEBUG=1 emcc --memory-init-file 0 -Oz -g0  Lparser2.js.c -o Lparser2.js -s EXPORTED_FUNCTIONS="['_do_read_ls']" -s ALLOW_MEMORY_GROWTH=1
+// c
 
 
 #include <stdio.h>
@@ -227,28 +227,6 @@ static bool             nowait = false, poly_limit = false;
 static large_string     inputname, outputname, directory;
 static r32				x_max, x_min, y_max, y_min, z_max, z_min;
 
-void reset ()
-{
-
-  zmin = (r32) 1e30;
-  thick = 100;
-  rand_amount = zero;
-  min_thick = zero;
-  trope_amount = zero;
-  max_prod = 4L * 1024L * 1024L; /* Maximum size l-system production string */
-  poly_count = 0L; mesh_count = 0L, vert_count = 0L, pcount_limit = 0L;
-  num = 0; col = 2; lev = 1; last_col = 0; obj = 0; muts = 0;
-  dis = one; ang = (r32) 45.0; dis2 = half; tr = (r32) 0.2;
-  closed_form = false; switch_yz = false; trace = false;
-  nowait = false; poly_limit = false;
-  memset(inputname, 0, sizeof inputname);
-  memset(outputname, 0, sizeof outputname);
-  memset(directory, 0, sizeof directory);
-  x_max = 0; x_min = 0; y_max = 0; y_min = 0; z_max; z_min = 0;
-
-}
-
-
 /* Settings stack used for solving [] references */
 typedef struct s_rec {
     vector                  pos;            /* Position in 3space of turtle
@@ -305,6 +283,35 @@ static polygon_array    poly_store;         /* The store where polygons
                                              * accumulate before saved to disc */
 static vector           ver[max_p_object];  /* The store where vertices
                                              * accumulate */
+
+void reset ()
+{
+
+  zmin = (r32) 1e30;
+  thick = 100;
+  rand_amount = zero;
+  min_thick = zero;
+  trope_amount = zero;
+  max_prod = 4L * 1024L * 1024L; /* Maximum size l-system production string */
+  poly_count = 0L; mesh_count = 0L, vert_count = 0L, pcount_limit = 0L;
+  num = 0; col = 2; lev = 1; last_col = 0; obj = 0; muts = 0;
+  dis = one; ang = (r32) 45.0; dis2 = half; tr = (r32) 0.2;
+  closed_form = false; switch_yz = false; trace = false;
+  nowait = false; poly_limit = false;
+  memset(inputname, 0, sizeof inputname);
+  memset(outputname, 0, sizeof outputname);
+  memset(directory, 0, sizeof directory);
+  x_max = 0; x_min = 0; y_max = 0; y_min = 0; z_max; z_min = 0;
+  scount = 0;
+  pscount = 0;
+  free(object_s);
+  free(otemp);
+  free(stack);
+  free(pstack);
+
+}
+
+
 
 /* String utils ----------------------------------------------------------- */
 
@@ -900,7 +907,7 @@ L_init(void)
     FILE                   *f;
     char                    temp[rule_s];
     large_string            keyword, command, r_1, r_2;
-    int                     i, tt, r, g, b;
+    s16                     i, tt, r, g, b;
     r32                     closed;
     
  /* Init mem */
@@ -941,10 +948,10 @@ L_init(void)
             Message("K[%s] C[%s]\n", keyword, command);
 
         if (strcmp(keyword, "recursion") == 0) { 	/* Use keyword to determine action */
-            sscanf(command, "%d", &lev);
+            sscanf(command, "%hd", &lev);
     
         } else if (strcmp(keyword, "mutation") == 0){
-            sscanf(command, "%d", &muts);
+            sscanf(command, "%hd", &muts);
 
         } else if (strcmp(keyword, "angle") == 0){
             sscanf(command, "%f", &ang);
@@ -956,26 +963,26 @@ L_init(void)
             sscanf(command, "%f", &min_thick);
 
         } else if (strcmp(keyword, "switch_yz") == 0){
-            sscanf(command, "%d", &tt);
+            sscanf(command, "%hd", &tt);
             switch_yz = (tt == 1);
 
         } else if (strcmp(keyword, "trace") == 0){
-            sscanf(command, "%d", &tt);
+            sscanf(command, "%hd", &tt);
             trace = (tt == 1);
 
         } else if (strcmp(keyword, "poly_limit") == 0){
-            sscanf(command, "%ld", &pcount_limit);
+            sscanf(command, "%d", &pcount_limit);
             poly_limit = true;
 
         } else if (strcmp(keyword, "no_wait") == 0){
-            sscanf(command, "%d", &tt);
+            sscanf(command, "%hd", &tt);
             nowait = (tt == 1);
 
         } else if (strcmp(keyword, "shape") == 0){
             sscanf(command, "%f", &closed);
 
         } else if (strcmp(keyword, "color") == 0){
-            sscanf(command, "%d %d %d %d", &tt, &r, &g, &b);
+            sscanf(command, "%hd %hd %hd %hd", &tt, &r, &g, &b);
             Vector_make(color_store[tt], (r32) r / (r32) 255.0, (r32) g / (r32) 255.0, (r32) b / (r32) 255.0);
 
         } else if (strcmp(keyword, "axiom") == 0){
