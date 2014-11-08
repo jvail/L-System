@@ -15,7 +15,7 @@
 
       $(function () {
 
-        $('#left').width("100%").height("100%").split({orientation:'vertical', limit:50, position:'30%'});
+        $('#left').width("100%").height("90%").split({orientation:'vertical', limit:50, position:'30%'});
         $('.vsplitter').css('pointer-events', 'auto');
 
         $('#parse').on('click', function () {
@@ -25,8 +25,11 @@
 
         function parse () {
           var ls = editor.getSession().getValue();
+          
+          if (ls && ls.length > 0)
+            Module.read_ls(ls);
+          
           console.log(ls);
-          Module.read_ls(ls);
         }
 
         $('#files').on('change', function() {
@@ -41,21 +44,6 @@
 
         });
 
-var example = "recursion 37\n\
-angle 10\n\
-thickness 10\n\
-shape 1\n\
-\n\
-axiom c(10)PPPc(3)PPPPPc(5)PPPPPc(7)PPPPPc(9)PPPPPPc(11)PPPPPPPc(13)PPPPPc(11)PPPPPPc(8)PPc(6)PPPc(4)PPPPPc(2)PPPPPcPPPPPPPPP\n\
-\n\
-rule P = [oA]>[soB]s\n\
-\n\
-rule o = ^(100)ggg&(15)\n\
-rule s = '(.95)\n\
-\n\
-rule A = [^gA{.].\n\
-rule B = B^.g.}";    
-        editor.getSession().setValue(example);
         setTimeout(parse, 1000);
 
       });
@@ -82,13 +70,13 @@ rule B = B^.g.}";
       #left {
         top: 60px;
         position: absolute;
-        height:100%;
+        height:90%;
         width: 100%;
         background-color: rgba(0,0,255,0);
         pointer-events: none;
       }
       #editor { 
-        height: 90%;
+        height: 100%;
         width: 100%;
         background-color: rgba(0,0,0,0.2);
         pointer-events: auto;
@@ -172,6 +160,23 @@ rule B = B^.g.}";
     <div id="left">
       <div>
           <div id="editor">
+# Lparser example file
+# shell 2
+
+recursion 37
+angle 10
+thickness 10
+shape 1
+
+axiom c(11)PPPPPPc(8)PPPPPPPPPPPPc(4)PPPPPPPPPPPPPPPPPc(7)PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+rule P = [oA]>[soB]s
+
+rule o = ^(120)ggg&(45)
+rule s = '(.95)
+
+rule A = [^gA{.].
+rule B = B^.g.}
           </div>  
         </div>
         <div id='dummy'></div> <!-- dummy div -->
