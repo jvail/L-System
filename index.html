@@ -4,8 +4,10 @@
     <title>L-System</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="jquery/jquery.splitter.css" rel="stylesheet"/>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jquery/jquery.splitter-0.14.0.js"></script>
     <script type="text/javascript">
 
       var sceneObject = null;
@@ -13,30 +15,33 @@
 
       $(function () {
 
-          $('#parse').on('click', function () {
-            $('#output').fadeIn("fast");
-            parse();
+        $('#left').width("100%").height("100%").split({orientation:'vertical', limit:50, position:'30%'});
+        $('.vsplitter').css('pointer-events', 'auto');
+
+        $('#parse').on('click', function () {
+          $('#output').fadeIn("fast");
+          parse();
+        });
+
+        function parse () {
+          var ls = editor.getSession().getValue();
+          console.log(ls);
+          Module.read_ls(ls);
+        }
+
+        $('#files').on('change', function() {
+          var name = $(this).val();
+          $.ajax({
+            url: 'ls/' + name,
+            dataType: 'text',
+            success: function (data) {
+              editor.getSession().setValue(data);
+            }
           });
 
-          function parse () {
-            var ls = editor.getSession().getValue();
-            console.log(ls);
-            Module.read_ls(ls);
-          }
+        });
 
-          $('#files').on('change', function() {
-            var name = $(this).val();
-            $.ajax({
-              url: 'ls/' + name,
-              dataType: 'text',
-              success: function (data) {
-                editor.getSession().setValue(data);
-              }
-            });
-
-          });
-
-          setTimeout(parse, 1000);
+        setTimeout(parse, 1000);
 
       });
 
@@ -55,29 +60,33 @@
         top: 10px;
         width: 100%;
         text-align: center;
-        z-index: 100;
+        z-index: 1;
         display:block;
       }
       #info a { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
       #left {
         position: absolute;
         height: 100%;
-        width: 500px;
+        width: 100%;
+        background-color: rgba(0,0,255,0);
+        pointer-events: none;
       }
       #editor { 
-        height: 90%;
-        width: 500px;
-        background-color: rgba(0,0,0,0.1);
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0,0,0,0.2);
+        pointer-events: auto;
+        z-index: 2;
       }
       #output {
           position: absolute;
-          top: 50px;
+          top: 80px;
           right: 10px;
           height: 90%;
           width: 450px;
           background-color: rgba(0,0,0,0.1);
           border: 0;
-          color: white;
+          color: lightGrey;
           font-family: 'Lucida Console', Monaco, monospace;
           outline: none;
           max-width: 450px;
@@ -88,6 +97,11 @@
         margin-top: 20px;
         height: 30px;
         padding: 20px;
+        pointer-events: auto;
+      }
+      #dummy {
+        opacity: 0;
+        pointer-events: none;
       }
     </style>
   </head>
@@ -96,54 +110,53 @@
 
     <textarea id="output" rows="8"></textarea>
     <div id="info">
-      Little L-System playground (<a href="https://github.com/jvail/L-System" target="_blank">build</a> with three.js and emscripten). Lparser and examples by <a href="http://laurenslapre.nl/lapre_004.htm" target="_blank">Laurens Lapre</a>
+            Little L-System playground (<a href="https://github.com/jvail/L-System" target="_blank">build</a> with three.js and emscripten). Lparser and examples by <a href="http://laurenslapre.nl/lapre_004.htm" target="_blank">Laurens Lapre</a><br>
+      <label for="files">Select file</label>
+        <select id="files">
+          <option value="abop1.ls">abop1</option>
+          <option value="abop2.ls">abop2</option>
+          <option value="abop3.ls">abop3</option>
+          <option value="abop4.ls">abop4</option>
+          <option value="abop5.ls">abop5</option>
+          <option value="abop6.ls">abop6</option>
+          <option value="airhorse.ls">airhorse</option>
+          <option value="axis.ls">axis</option>
+          <option value="bekerplant.ls">bekerplant</option>
+          <option value="cello_plant.ls">cello_plant</option>
+          <option value="colors.ls">colors</option>
+          <option value="fern.ls">fern</option>
+          <option value="fractal_hexahedron.ls">fractal_hexahedron</option>
+          <option value="fractal_octahedron.ls">fractal_octahedron</option>
+          <option value="horn.ls">horn</option>
+          <option value="leaves.ls" selected>leaves</option>
+          <option value="menger_cube.ls">menger_cube</option>
+          <option value="passie.ls">passie</option>
+          <option value="polyhedra.ls">polyhedra</option>
+          <option value="rainbow.ls">rainbow</option>
+          <option value="shell.ls">shell</option>
+          <option value="sierpinski.ls">sierpinski</option>
+          <option value="spider.ls">spider</option>
+          <option value="spiral_boat.ls">spiral_boat</option>at.ls
+          <option value="spiral0.ls">spiral0</option>
+          <option value="spiral1.ls">spiral1</option>
+          <option value="spiral2.ls">spiral2</option>
+          <option value="spiral_plant.ls">spiral_plant</option>
+          <option value="trail_of_trees.ls">trail_of_trees</option>
+          <option value="tree1.ls">tree1</option>
+          <option value="tree2.ls">tree2</option>
+          <option value="tree3.ls">tree3</option>
+          <option value="tree4.ls">tree4</option>
+          <option value="tree6.ls">tree6</option>
+          <option value="tree7.ls">tree7</option>
+          <option value="tree5.ls">tree5</option>
+        </select>, edit, click 
+        <button id='parse'>Parse</button> and wait (and hope there is enough memory left).<br>
+        Navigate with mouse (hold left, middle or right button). Find a pdf explaning Lparser's syntax <a href="https://github.com/jvail/L-System/raw/gh-pages/ls/Lparser.pdf" target="_blank">here</a>.
     </div>
 
     <div id="left">
-      <div id="control">
-        <label for="files">Select example file</label>
-          <select id="files">
-            <option value="abop1.ls">abop1</option>
-            <option value="abop2.ls">abop2</option>
-            <option value="abop3.ls">abop3</option>
-            <option value="abop4.ls">abop4</option>
-            <option value="abop5.ls">abop5</option>
-            <option value="abop6.ls">abop6</option>
-            <option value="airhorse.ls">airhorse</option>
-            <option value="axis.ls">axis</option>
-            <option value="bekerplant.ls">bekerplant</option>
-            <option value="cello_plant.ls">cello_plant</option>
-            <option value="colors.ls">colors</option>
-            <option value="fern.ls">fern</option>
-            <option value="fractal_hexahedron.ls">fractal_hexahedron</option>
-            <option value="fractal_octahedron.ls">fractal_octahedron</option>
-            <option value="horn.ls">horn</option>
-            <option value="leaves.ls" selected>leaves</option>
-            <option value="menger_cube.ls">menger_cube</option>
-            <option value="passie.ls">passie</option>
-            <option value="polyhedra.ls">polyhedra</option>
-            <option value="rainbow.ls">rainbow</option>
-            <option value="shell.ls">shell</option>
-            <option value="sierpinski.ls">sierpinski</option>
-            <option value="spider.ls">spider</option>
-            <option value="spiral_boat.ls">spiral_boat</option>at.ls
-            <option value="spiral0.ls">spiral0</option>
-            <option value="spiral1.ls">spiral1</option>
-            <option value="spiral2.ls">spiral2</option>
-            <option value="spiral_plant.ls">spiral_plant</option>
-            <option value="trail_of_trees.ls">trail_of_trees</option>
-            <option value="tree1.ls">tree1</option>
-            <option value="tree2.ls">tree2</option>
-            <option value="tree3.ls">tree3</option>
-            <option value="tree4.ls">tree4</option>
-            <option value="tree6.ls">tree6</option>
-            <option value="tree7.ls">tree7</option>
-            <option value="tree5.ls">tree5</option>
-          </select>
-and click 
-          <button id='parse'>Parse</button> (and wait) 
-        </div>
-        <div id="editor">
+      <div>
+          <div id="editor">
 # Lparser example file
  
 recursion 18
@@ -164,7 +177,9 @@ rule C = tfC
 rule a = [+a]d
 rule b = [-b]d
 rule d = tFd
+          </div>  
         </div>
+        <div id='dummy'></div> <!-- dummy div -->
       </div>
 
       <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -173,7 +188,8 @@ rule d = tFd
           editor.setTheme("ace/theme/monokai");
           editor.getSession().setMode("ace/mode/javascript");
           editor.session.setOption("useWorker", false);
-          document.getElementById('editor').style.fontSize='12px';
+          editor.setShowPrintMargin(false);
+          document.getElementById('editor').style.fontSize='14px';
       </script>
 
       <!-- from three.js VRML loader example -->
@@ -204,16 +220,24 @@ rule d = tFd
           if (sceneObject)
             scene.remove(sceneObject);
 
-          sceneObject = loader.parse(wrl);
-          scene.add(sceneObject);
-
           window.setTimeout(function () {
             $('#output').fadeOut("slow", function () {
               $('#output').val("");
             });
-          }, 5000);
+          }, 8000);
+
+          window.setTimeout(function () { 
+            sceneObject = loader.parse(wrl);
+            // for (var i = 0, is = sceneObject.children.length; i < is; i++) {
+              // sceneObject.children[i].material.ambient = sceneObject.children[i].material.color;
+              // sceneObject.children[i].material.emissive = sceneObject.children[i].material.color;
+            // }
+            // console.log(sceneObject);
+            scene.add(sceneObject);
+          }, 500);
 
         }
+
 
         function init2() {
 
@@ -235,9 +259,14 @@ rule d = tFd
 
           // light
 
-          var dirLight = new THREE.DirectionalLight( 0xFFF8DC );
-          dirLight.position.set( 200, 200, 1000 ).normalize();
 
+          // var ambient_clr = new THREE.Color(0.8, 0.8, 0.8);
+          // var ambient_lgt = new THREE.AmbientLight(ambient_clr.getHex());
+          // scene.add(ambient_lgt); 
+
+          var dir_clr = new THREE.Color(0.8, 0.8, 0.8);
+          var dirLight = new THREE.DirectionalLight( dir_clr.getHex());
+          dirLight.position.set( 200, 200, 1000 ).normalize();
           camera.add( dirLight );
           camera.add( dirLight.target );
 
