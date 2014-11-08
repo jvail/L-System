@@ -232,7 +232,7 @@ rule d = tFd
                 if (object instanceof THREE.Mesh) {
                   /* otherwise reflected light is white ??? */  
                   object.material.specular = object.material.color;
-                  object.material.shininess = 30;
+                  object.material.shininess = 100;
                 }
             });
             // console.log(sceneObject);
@@ -267,9 +267,8 @@ rule d = tFd
           // var ambient_lgt = new THREE.AmbientLight(ambient_clr.getHex());
           // scene.add(ambient_lgt); 
 
-          var dir_clr = new THREE.Color(0.8, 0.8, 0.8);
-          var dirLight = new THREE.DirectionalLight( dir_clr.getHex());
-          dirLight.position.set( 200, 200, 1000 ).normalize();
+          var dirLight = new THREE.DirectionalLight( 0xffffff );
+          dirLight.position.set( 1, 1, 1 ).normalize();
           camera.add( dirLight );
           camera.add( dirLight.target );
 
