@@ -41,6 +41,21 @@
 
         });
 
+var example = "recursion 37\n\
+angle 10\n\
+thickness 10\n\
+shape 1\n\
+\n\
+axiom c(10)PPPc(3)PPPPPc(5)PPPPPc(7)PPPPPc(9)PPPPPPc(11)PPPPPPPc(13)PPPPPc(11)PPPPPPc(8)PPc(6)PPPc(4)PPPPPc(2)PPPPPcPPPPPPPPP\n\
+\n\
+rule P = [oA]>[soB]s\n\
+\n\
+rule o = ^(100)ggg&(15)\n\
+rule s = '(.95)\n\
+\n\
+rule A = [^gA{.].\n\
+rule B = B^.g.}";    
+        editor.getSession().setValue(example);
         setTimeout(parse, 1000);
 
       });
@@ -157,20 +172,6 @@
     <div id="left">
       <div>
           <div id="editor">
-recursion 37
-angle 10
-thickness 10
-shape 1
-
-axiom c(10)PPPc(3)PPPPPc(5)PPPPPc(7)PPPPPc(9)PPPPPPc(11)PPPPPPPc(13)PPPPPc(11)PPPPPPc(8)PPc(6)PPPc(4)PPPPPc(2)PPPPPcPPPPPPPPP
-
-rule P = [oA]>[soB]s
-
-rule o = ^(100)ggg&(15)
-rule s = '(.95)
-
-rule A = [^gA{.].
-rule B = B^.g.}
           </div>  
         </div>
         <div id='dummy'></div> <!-- dummy div -->
