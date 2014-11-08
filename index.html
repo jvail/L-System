@@ -57,7 +57,7 @@
       #info {
         color: #fff;
         position: absolute;
-        top: 10px;
+        top: 5px;
         width: 100%;
         text-align: center;
         z-index: 1;
@@ -65,19 +65,18 @@
       }
       #info a { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
       #left {
-        top: 50px;
+        top: 60px;
         position: absolute;
-        height: 100%;
+        height:100%;
         width: 100%;
         background-color: rgba(0,0,255,0);
         pointer-events: none;
       }
       #editor { 
-        height: 100%;
+        height: 90%;
         width: 100%;
         background-color: rgba(0,0,0,0.2);
         pointer-events: auto;
-        z-index: 2;
       }
       #output {
           position: absolute;
@@ -158,26 +157,20 @@
     <div id="left">
       <div>
           <div id="editor">
-# Lparser example file
- 
-recursion 18
-angle 10  
-thickness 15  
-switch_yz 1
+recursion 37
+angle 10
+thickness 10
 shape 1
 
-axiom [|FFFFFFFFFFF]P>(90)'P>(90)'P>(90)'P  
+axiom c(10)PPPc(3)PPPPPc(5)PPPPPc(7)PPPPPc(9)PPPPPPc(11)PPPPPPPc(13)PPPPPc(11)PPPPPPc(8)PPc(6)PPPc(4)PPPPPc(2)PPPPPcPPPPPPPPP
 
-rule P = [&(10)G[ccA][ccB][a][b]]
-rule G = tFtFtFtFtFtFtFtFtFtFtFtFtF
+rule P = [oA]>[soB]s
 
-rule A = [+A{.].C.}
-rule B = [-B{.].C.}
-rule C = tfC
+rule o = ^(100)ggg&(15)
+rule s = '(.95)
 
-rule a = [+a]d
-rule b = [-b]d
-rule d = tFd
+rule A = [^gA{.].
+rule B = B^.g.}
           </div>  
         </div>
         <div id='dummy'></div> <!-- dummy div -->
