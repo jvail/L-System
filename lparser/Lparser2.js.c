@@ -900,7 +900,7 @@ L_init(void)
     FILE                   *f;
     char                    temp[rule_s];
     large_string            keyword, command, r_1, r_2;
-    s16                     i, tt, r, g, b;
+    int                     i, tt, r, g, b;
     r32                     closed;
     
  /* Init mem */
