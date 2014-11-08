@@ -7,7 +7,7 @@
    modified by Jan Vaillant
 */
 
-// c
+// EMCC_DEBUG=1 emcc --memory-init-file 0 -Oz -g0  Lparser2.js.c -o Lparser2.js -s EXPORTED_FUNCTIONS="['_do_read_ls']" -s ALLOW_MEMORY_GROWTH=1
 
 
 #include <stdio.h>
